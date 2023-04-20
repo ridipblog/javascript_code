@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <input type="text" class="text" oninput="function_1()">
+    <p class="demo"></p>
+    <div class="div_1">
+        <div class="div_2">
+
+        </div>
+    </div>
+    <script src="json.json"></script>
+    <script>
+        var json_data = JSON.parse(data);
+        var json_len=Object.keys(json_data).length;
+        function function_1() {
+            var text = document.getElementsByClassName("text")[0].value;
+            var demo = document.getElementsByClassName("demo")[0];
+            var temp = "";
+            var list_1=[];
+            for(var i=0;i<json_len;i++){
+                temp="";
+                var tempList=[json_data[i]['name']];
+                if(tempList[0].length>=text.length){
+                    for(var j=0;j<text.length;j++){
+                        temp+=tempList[0][j];
+                    }
+                    if(temp!=="" && text.toLowerCase()===temp.toLowerCase()){
+                        list_1.push(tempList[0]);
+                    }
+                }
+            }
+            var div_2=document.getElementsByClassName("div_2")[0];
+            div_2.remove();
+            var new_div=document.createElement("div");
+            new_div.setAttribute("class","div_2");
+            document.getElementsByClassName("div_1")[0].appendChild(new_div);
+            for(var i=0;i<list_1.length;i++){
+                var new_button=document.createElement("button");
+                new_button.innerHTML=list_1[i];
+                new_button.setAttribute("class","add_btn");
+                new_div.appendChild(new_button);
+            }
+        }
+    </script>
+</body>
+
+</html>
