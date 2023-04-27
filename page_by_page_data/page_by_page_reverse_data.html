@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .div_3{
+            border: 2px solid red;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="div_1">
+        <div  id="class_2" class="div_2">
+
+        </div>
+    </div>
+    <button value="0" class="btn" onclick="prev()">Prev</button>
+    <button value="4" class="btn" onclick="next()">Next</button>
+    <input type="hidden" class="count" value="0">
+    <script src="./json/government_job_short.json"></script>
+    <script>
+        var div_1=document.getElementsByClassName("div_1")[0];
+        var json_data=JSON.parse(government_job_short);
+        var data_len=Object.keys(json_data).length;
+        var reverse_len=data_len-1;
+        var pre_reverse_len=data_len-1;
+        // var data_len=22;
+        var key_name=['job_title','description'];
+        function load_data(){
+            var btn_1=document.getElementsByClassName("btn")[0];
+            var btn_2=document.getElementsByClassName("btn")[1];
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var count=document.getElementsByClassName("count")[0];
+            var value_1=parseInt(btn_1.value);
+            var value_2=parseInt(btn_2.value);
+            if(value_1==0){
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                var run=4;
+                if(data_len<4){
+                    run=data_len;
+                }
+                for(var i=0;i<run;i++){
+                    if(data_len>i){
+                        btn_2.value=i+1;
+                        count.value=parseInt(count.value)+1
+                        var new_div=document.createElement("div");
+                        new_div.setAttribute("class","div_3");
+                        main_div.appendChild(new_div);
+                        for(var j=0;j<2;j++){
+                            var new_p=document.createElement("p");
+                            new_p.innerHTML=json_data[reverse_len][key_name[j]];
+                            new_div.appendChild(new_p);
+                        }
+                        reverse_len--;
+                    }
+                }
+                console.log(reverse_len);
+                console.log(pre_reverse_len);
+            }
+        }
+        load_data();
+        function prev(){
+            var btn_1=document.getElementsByClassName("btn")[0];
+            var btn_2=document.getElementsByClassName("btn")[1];
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var count=document.getElementsByClassName("count")[0];
+            var value_1=parseInt(btn_1.value);
+            var value_2=parseInt(btn_2.value);
+            var temp_count_value=parseInt(count.value);
+            count.value="0";
+            if(value_1!=0){
+                if(div_2){
+                    div_2.remove();
+                }
+                var temp_value_1=value_1-temp_count_value;
+                var temp_value_2=value_2-temp_count_value;
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                reverse_len=pre_reverse_len;
+                for(var i=temp_value_1;i<temp_value_2;i++){
+                    count.value=parseInt(count.value)+1;
+                    var new_div=document.createElement("div");
+                    new_div.setAttribute("class","div_3");
+                    main_div.appendChild(new_div);
+                    for(var j=0;j<2;j++){
+                        var new_p=document.createElement("p");
+                        new_p.innerHTML=json_data[reverse_len][key_name[j]];
+                        new_div.appendChild(new_p);
+                    }
+                    if(pre_reverse_len!=data_len-1){
+                        pre_reverse_len++;
+                    }
+                    reverse_len--;
+                }
+                console.log(reverse_len);
+                console.log(pre_reverse_len);
+                btn_1.value=temp_value_1;
+                btn_2.value=temp_value_2;
+            }
+            else{
+                alert("Already Latest Page ");
+            }
+        }
+        function next(){
+            var btn_1=document.getElementsByClassName("btn")[0];
+            var btn_2=document.getElementsByClassName("btn")[1];
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var count=document.getElementsByClassName("count")[0];
+            var value_2=parseInt(btn_2.value);
+            if(data_len>value_2){
+                count.value="0";
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                // pre_reverse_len=reverse_len;
+                for(var i=value_2;i<value_2+4;i++){
+                    if(i<data_len){
+                        btn_1.value=parseInt(btn_1.value)+1;
+                        count.value=parseInt(count.value)+1;
+                        btn_2.value=parseInt(btn_2.value)+1;
+                        var new_div=document.createElement("div");
+                        new_div.setAttribute("class","div_3");
+                        main_div.appendChild(new_div);
+                        for(var j=0;j<2;j++){
+                            var new_p=document.createElement("p");
+                            new_p.innerHTML=json_data[reverse_len][key_name[j]];
+                            new_div.appendChild(new_p);
+                        }
+                        pre_reverse_len--;
+                        reverse_len--;
+                    }
+                }
+                if(reverse_len==-1){
+                    reverse_len=reverse_len+parseInt(count.value);
+                    pre_reverse_len=pre_reverse_len+parseInt(count.value);
+                }
+                console.log(reverse_len);
+                console.log(pre_reverse_len);
+            }
+            else{
+                alert("This is last page");
+            }
+        }
+    </script>
+</body>
+</html>
