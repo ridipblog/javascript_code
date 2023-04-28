@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .div_2
+        {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .reverse_div{
+            flex-direction: column-reverse;
+        }
+        .div_3 {
+            border: 2px solid red;
+            margin: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="div_1">
+        <div id="class_2" class="div_2">
+
+        </div>
+    </div>
+    <button class="btn" onclick="prev()">Prev</button>
+    <button class="btn" onclick="next()">Next</button>
+    <button onclick="load_data()">Reset</button>
+    <script src="./json/government_job_short.json"></script>
+    <script>
+        var div_1 = document.getElementsByClassName("div_1")[0];
+        var json_data = JSON.parse(government_job_short);
+        var data_len = Object.keys(json_data).length;
+        var reverse_len;
+        var pre_reverse_len;
+        var count;
+        var key_name = ['job_name', 'description'];
+        if (!session_data_get("data_set")) {
+            console.log("Start");
+            load_data();
+        }
+        else{
+            console.log("Same");
+            same_data();
+        }
+        function load_data() {
+            var div_2=document.getElementsByClassName("div_2")[0];
+            if(data_len!=0){
+                pre_reverse_len=data_len-1;
+                reverse_len=pre_reverse_len-4;
+                count=0;
+                session_data_set("rev_len",reverse_len);
+                session_data_set("pre_rev_len",pre_reverse_len);
+                session_data_set("data_set","Ok");
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                for(var i=pre_reverse_len;i>reverse_len;i--){
+                    if(pre_reverse_len>-1){
+                        count++;
+                        var new_div=document.createElement("div");
+                        new_div.setAttribute("class","div_3");
+                        main_div.appendChild(new_div);
+                        for(var j=0;j<2;j++){
+                            var new_p=document.createElement("p");
+                            new_p.innerHTML=json_data[i][key_name[j]];
+                            new_div.appendChild(new_p);
+                        }
+                    }
+                }
+                session_data_set("count",count);
+            }
+            else{
+                alert("No Data Available");
+            }
+        }
+        function same_data(){
+            pre_reverse_len=parseInt(session_data_get("pre_rev_len"));
+            reverse_len=parseInt(session_data_get("rev_len"));
+            count=parseInt(session_data_get("count"));
+            var div_2=document.getElementsByClassName("div_2")[0];
+            if(div_2){
+                div_2.remove();
+            }
+            var main_div=document.createElement("div");
+            main_div.setAttribute("class","div_2 reverse_div");
+            div_1.appendChild(main_div);
+            reverse_len=reverse_len+1;
+            while(count!=0){
+                count--;
+                var new_div=document.createElement("div");
+                new_div.setAttribute("class","div_3");
+                main_div.appendChild(new_div);
+                for(var j=0;j<2;j++){
+                    var new_p=document.createElement("p");
+                    new_p.innerHTML=json_data[reverse_len][key_name[j]];
+                    new_div.appendChild(new_p);
+                }
+                reverse_len++;
+            }
+        }
+        function prev() {
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var temp_count_value=parseInt(session_data_get("count"));
+            pre_reverse_len=parseInt(session_data_get("pre_rev_len"));
+            reverse_len=parseInt(session_data_get("rev_len"));
+            if(data_len-1>pre_reverse_len){
+                count=0;
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                reverse_len=reverse_len+temp_count_value;
+                pre_reverse_len=pre_reverse_len+temp_count_value;
+                session_data_set("rev_len",reverse_len);
+                session_data_set("pre_rev_len",pre_reverse_len);
+                for(var i=pre_reverse_len;i>reverse_len;i--){
+                    count++;
+                    var new_div=document.createElement("div");
+                    new_div.setAttribute("class","div_3");
+                    main_div.appendChild(new_div);
+                    for(var j=0;j<2;j++){
+                        var new_p=document.createElement("p");
+                        new_p.innerHTML=json_data[i][key_name[j]];
+                        new_div.appendChild(new_p);
+                    }
+                }
+                session_data_set("count",count);
+            }
+            else{
+                alert("Already Lastest Page");
+            }
+        }
+        function next() {
+            var div_2=document.getElementsByClassName("div_2")[0];
+            reverse_len=parseInt(session_data_get("rev_len"));
+            pre_reverse_len=parseInt(session_data_get("pre_rev_len"));
+            if(reverse_len>-1){
+                count=0;
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                var temp_reverse_len=reverse_len-4;
+                for(var i=reverse_len;i>temp_reverse_len;i--){
+                    if(i>-1){
+                        count++;
+                        var new_div=document.createElement("div");
+                        new_div.setAttribute("class","div_3");
+                        main_div.appendChild(new_div);
+                        for(var j=0;j<2;j++){
+                            var new_p=document.createElement("p");
+                            new_p.innerHTML=json_data[i][key_name[j]];
+                            new_div.appendChild(new_p);
+                        }
+                        reverse_len--;
+                        pre_reverse_len--;
+                    }
+                }
+                session_data_set("count",count);
+                session_data_set("rev_len",reverse_len);
+                session_data_set("pre_rev_len",pre_reverse_len);
+            }
+            else{
+                alert("This Is Last Page ");
+            }
+
+        }
+        function session_data_set(key, value) {
+            sessionStorage.setItem(key, value);
+        }
+        function session_data_get(key) {
+            if (sessionStorage.getItem(key)) {
+                return sessionStorage.getItem(key);
+            }
+        }
+        function session_data_remove() {
+            sessionStorage.clear();
+        }
+    </script>
+</body>
+
+</html>
