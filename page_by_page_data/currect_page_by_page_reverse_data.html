@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .div_3{
+            border: 2px solid red;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="div_1">
+        <div  id="class_2" class="div_2">
+
+        </div>
+    </div>
+    <button value="0" class="btn" onclick="prev()">Prev</button>
+    <button value="4" class="btn" onclick="next()">Next</button>
+    <input type="hidden" class="count" value="0">
+    <script src="./json/government_job_short.json"></script>
+    <script>
+        var div_1=document.getElementsByClassName("div_1")[0];
+        var json_data=JSON.parse(government_job_short);
+        var data_len=Object.keys(json_data).length;
+        var pre_reverse_len=data_len-1;
+        var reverse_len=pre_reverse_len-4;
+        var key_name=['job_name','description'];
+        for(var i=0;i<data_len;i++){
+            console.log(json_data[i]['job_name']);
+        }
+        function load_data(){
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var count=document.getElementsByClassName("count")[0];
+            if(data_len!=0){
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                var run=4;
+                if(data_len<4){
+                    run=data_len;
+                }
+                for(var i=pre_reverse_len;i>reverse_len;i--){
+                    if(pre_reverse_len>-1){
+                        count.value=parseInt(count.value)+1
+                        var new_div=document.createElement("div");
+                        new_div.setAttribute("class","div_3");
+                        main_div.appendChild(new_div);
+                        for(var j=0;j<2;j++){
+                            var new_p=document.createElement("p");
+                            new_p.innerHTML=json_data[i][key_name[j]];
+                            new_div.appendChild(new_p);
+                        }
+                    }
+                }
+                console.log(reverse_len);
+                console.log(pre_reverse_len);
+                console.log(count.value);
+            }
+        }
+        load_data();
+        function prev(){
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var count=document.getElementsByClassName("count")[0];
+            var temp_count_value=parseInt(count.value);
+            if(data_len-1>pre_reverse_len){
+                count.value="0";
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                reverse_len=reverse_len+temp_count_value;
+                pre_reverse_len=pre_reverse_len+temp_count_value;
+                temp_pre_rev_len=pre_reverse_len;
+                for(var i=pre_reverse_len;i>reverse_len;i--){
+                    count.value=parseInt(count.value)+1;
+                    var new_div=document.createElement("div");
+                    new_div.setAttribute("class","div_3");
+                    main_div.appendChild(new_div);
+                    for(var j=0;j<2;j++){
+                        var new_p=document.createElement("p");
+                        new_p.innerHTML=json_data[temp_pre_rev_len][key_name[j]];
+                        new_div.appendChild(new_p);
+                    }
+                    temp_pre_rev_len--;
+                }
+                console.clear();
+                console.log(reverse_len);
+                console.log(pre_reverse_len);
+                console.log(count.value);
+            }
+            else{
+                alert("Already Latest Page ");
+            }
+        }
+        function next(){
+            var div_2=document.getElementsByClassName("div_2")[0];
+            var count=document.getElementsByClassName("count")[0];
+            if(reverse_len>-1){
+                count.value="0";
+                if(div_2){
+                    div_2.remove();
+                }
+                var main_div=document.createElement("div");
+                main_div.setAttribute("class","div_2");
+                div_1.appendChild(main_div);
+                temp_reverse_len=reverse_len;
+                for(var i=reverse_len;i>temp_reverse_len-4;i--){
+                    if(i>-1){
+                        count.value=parseInt(count.value)+1;
+                        var new_div=document.createElement("div");
+                        new_div.setAttribute("class","div_3");
+                        main_div.appendChild(new_div);
+                        for(var j=0;j<2;j++){
+                            var new_p=document.createElement("p");
+                            new_p.innerHTML=json_data[i][key_name[j]];
+                            new_div.appendChild(new_p);
+                        }
+                        pre_reverse_len--;
+                        reverse_len--;
+                    }
+                }
+                console.clear()
+                console.log(reverse_len);
+                console.log(pre_reverse_len);
+                console.log(count.value);
+            }
+            else{
+                alert("This is last page");
+            }
+        }
+    </script>
+</body>
+</html>
